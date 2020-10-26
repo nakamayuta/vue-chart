@@ -2,22 +2,22 @@
     <div class="chart">
         <h1>This is a Chart page</h1>
         <div class="wrapper">
-        <Bar></Bar>
-        <Pie></Pie>
+        <bar-chart></bar-chart>
+        <!-- <Pie></Pie> -->
         </div>
     </div>
 </template>
 
 <script>
 // import Bar from '../components/Bar.vue';
-import Bar from '../components/Bar'
-import Pie from '../components/Pie'
+import BarChart from '../components/BarChart'
+// import Pie from '../components/Pie'
 
 export default {
     // name: 'chart',
     components: {
-        Bar,
-        Pie
+        BarChart,
+        // Pie
     }
 }
 </script>
