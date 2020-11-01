@@ -1,93 +1,63 @@
 <template>
     <div class="chart">
         <h1>This is a Chart page</h1>
-        <div class="wrapper">
-        <bar-chart
-        :chartData="datacollection"
-        :chartOptions="options"
-        ></bar-chart>
+        <div class="wrapper-chart container">
+            <div class="d-flex m-0 p-0">
+                <div class="wrapper-bar">
+                    <!-- <ul class="list-group col-1">
+                        <li class="list-group-item">月</li>
+                        <li class="list-group-item">日</li>
+                    </ul> -->
+                    <bar-chart
+                    :chartData="barDatacollection"
+                    ></bar-chart>
+                </div>
+                <div class="wrapper-pie">
+                <pie-chart
+                    :chartData="pieDatacollection"
+                ></pie-chart>
+                <div class="legend">
+                    <ul>
+                        <li>
+                            <div class="box"></div>
+                            <p>PHP</p>
+                        </li>
+                        <li>
+                            <div class="box"></div>
+                            <p>Javascript</p>
+                        </li>
+                        <li>
+                            <div class="box"></div>
+                            <p>Python</p>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import BarChart from '../components/BarChart'
+import PieChart from '../components/PieChart'
 import moment from 'moment' // 日付操作
 
 export default {
     // name: 'chart',
     components: {
         BarChart,
+        PieChart
     },
     data() {
         return {
-            datacollection: {},
-            // height: window.innerHeight * .5,
-            // width: window.innerWidth * 1,
-            options: {
-                title: {
-                    display: true,
-                    text: ""
-                },
-                legend: {
-                    display: false, // datasets.labelの表示非表示
-                },
-                maintainAspectRatio: false,
-                responsive: true,
-                layout: {
-                    padding: {
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0
-                    }
-                },
-                tooltips:{
-                    backgroundColor: "rgba(0,0,0,0.8)",
-                    callbacks: {
-                        label: function(tooltipItems, data){
-                            let dataPosition = data.datasets[tooltipItems.datasetIndex].data.length;
-                            let dataLabel = data.datasets[tooltipItems.datasetIndex].label;
-                            /******/
-                            let els = {}
-                            let sum = 0;
-                            for (let i = 0; i < data.datasets.length; i++) {
-                                if (data.datasets[i].data.length == dataPosition) {
-                                    els[data.datasets[i].label] = data.datasets[i].data[dataPosition - 1];
-                                    sum += data.datasets[i].data[dataPosition - 1];
-                                }
-                            }
-                            console.log(`date: ${tooltipItems.label}`); // 日付
-                            console.log(`sum-time: ${sum}`); // 1日の勉強時間
-                            for (const key in els) {
-                                console.log(`${key}: ${els[key]}`); // 各勉強時間
-                            }
-                            console.log(dataLabel);
-                            console.log('-----');
-                            /******/
-                            return `${dataLabel} ${tooltipItems.value}時間`
-                        }
-                    }
-                },
-                scales: {
-                // x軸
-                xAxes: [{
-                    stacked: true,
-                    barPercentage: .7, // バーの幅
-                }],
-                // y軸
-                yAxes: [{
-                    // y軸の表示の詳細
-                    stacked: true,
-                    ticks: {
-                        beginAtZero: true,
-                        stepSize: 2, // 表示の間隔
-                        callback: (value) => {
-                            return value + '時間'
-                        }
-                    }
-                }]
-                }
+            barDatacollection: {},
+            barOptions: {
+            },
+            // barHeight: document.querySelector(".wrapper-bar").clientHeight * .8,
+            // barWidth: document.querySelector(".wrapper-bar").clientWidth * .7,
+            pieDatacollection:{},
+            pieOptions:{
             }
         }
     },
@@ -100,7 +70,7 @@ export default {
     },
     methods: {
       fillData(){
-          this.datacollection = {
+          this.barDatacollection = {
               labels: [],
               datasets: [
                 {
@@ -165,6 +135,13 @@ export default {
                 },
               ]
           };
+          this.pieDatacollection = {
+            labels: ["PHP", "Javascript", "Python"],
+            datasets: [{
+                backgroundColor: ["#2196F3", "#8BC34A", "#FF9800"],
+                data: [60, 30, 10]
+            }],
+          }
       },
       getDates: function() {
         let dataArr = [];
@@ -173,8 +150,8 @@ export default {
           let day = moment().add(i, 'd')['_d'].getDate();
           dataArr.push(`${month}/${day}`);
         }
-        this.datacollection.labels = dataArr;
-        this.options.title.text = `${dataArr[0]} ~ ${dataArr[dataArr.length-1]}`;
+        this.barDatacollection.labels = dataArr;
+        // this.barOptions.title.text = `${dataArr[0]} ~ ${dataArr[dataArr.length-1]}`;
       },
     }
 }
@@ -183,13 +160,51 @@ export default {
     .chart {
         padding-top: 10px;
     }
-    .wrapper {
-        position: relative;
-        margin: auto;
-        width: 100vw;
-        /* width: 90%; */
+    .wrapper-chart {
+        height: 300px;
+        width: 85%;
+        padding: 0;
     }
-    #bar-chart {
-        padding: 10px;
+
+    .wrapper-bar {
+        border: 1px solid #00000029;
+        height: 300px;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+    }
+    .wrapper-pie {
+        border: 1px solid #00000029;
+        height: 300px;
+        width: 50%;
+        display: flex;
+        /* position: relative; */
+        /* justify-content: center; */
+        align-items: flex-end;
+        /* padding-bottom: 15px;
+        padding-left: 10px; */
+    }
+    .legend {
+        width: 40%;
+        height: 40%;
+        /* border: 1px solid #00000029; */
+        margin: auto;
+        margin-top: 60px;
+    }
+    .legend .box {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #aaa;
+    }
+    .legend ul {
+        list-style: none;
+    }
+    .legend li {
+        display: flex;
+    }
+    .legend li p{
+        padding-left: 10px;
     }
 </style>
